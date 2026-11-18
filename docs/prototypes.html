@@ -1,0 +1,562 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Campus Stores Prototypes</title>
+<meta name="description" content="Three interactive prototypes for the Campus Stores desk: issue a kit, take a partial return, and check in a unit." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<style>
+  /* Palette taken from inflowinventory.com design tokens */
+  :root {
+    --bg: #F8F8F8;            /* mineshaft-10 */
+    --card: #FFFFFF;
+    --fg: #222222;            /* mineshaft */
+    --muted: #7B7B7B;         /* mineshaft-70 */
+    --muted-bg: #F3F3F3;      /* mineshaft-20 */
+    --border: #EBEBEB;        /* mineshaft-30 */
+    --input: #DDDDDD;         /* mineshaft-40 */
+    --primary: #393385;       /* grape */
+    --primary-hover: #4A4599; /* grape-60 */
+    --primary-soft: #F5F6FF;  /* grape-10 */
+    --primary-soft-2: #E6E6FF;/* grape-20 */
+    --ring: #BBBEF0;          /* grape-40 */
+    --sun: #F7B952;           /* sun */
+    --sun-soft: #FEF8EF;      /* sun-10 */
+    --sun-line: #FCDFAF;      /* sun-30 */
+    --sun-ink: #994800;       /* sun-70 */
+    --pine: #2B837E;          /* pine-50 */
+    --pine-soft: #EBFAF9;     /* pine-10 */
+    --pine-line: #CCEBE9;     /* pine-20 */
+    --maple: #CF3A23;         /* maple-50 */
+    --maple-soft: #FFF2F0;    /* maple-10 */
+    --maple-line: #FADDD9;    /* maple-20 */
+    --sky: #0B5FB0;           /* sky-50 */
+    --sky-soft: #F0F8FF;      /* sky-10 */
+    --sky-line: #D9EAFA;      /* sky-20 */
+    --radius: 10px;
+    --shadow: 0 1px 2px rgba(34,34,34,.05);
+    --font: "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+    color-scheme: light;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; }
+  body { background: var(--bg); color: var(--fg); font: 14px/1.5 var(--font); -webkit-font-smoothing: antialiased; }
+  button, input, select { font: inherit; color: inherit; }
+  svg.i { width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; flex: none; }
+  svg.i.lg { width: 20px; height: 20px; }
+  svg.i.xl { width: 22px; height: 22px; stroke-width: 1.6; }
+
+  /* Shell */
+  .app { display: grid; grid-template-columns: 232px minmax(0, 1fr); min-height: 100vh; }
+  aside.side { background: var(--card); border-right: 1px solid var(--border); padding: 16px 12px; display: flex; flex-direction: column; gap: 4px; position: sticky; top: 0; height: 100vh; }
+  .brand { display: flex; align-items: center; gap: 10px; padding: 4px 8px 16px; }
+  .mark { width: 32px; height: 32px; border-radius: 8px; background: var(--primary); color: var(--sun); display: grid; place-items: center; }
+  .brand b { display: block; font-size: 14px; letter-spacing: -.01em; }
+  .brand small { color: var(--muted); font-size: 12px; }
+  .nav-label { font-size: 11px; font-weight: 600; color: var(--muted); padding: 10px 10px 4px; letter-spacing: .02em; }
+  .nav { display: flex; align-items: center; gap: 10px; padding: 8px 10px; border-radius: 8px; color: #4A4A4A; font-weight: 500; border: 0; background: none; width: 100%; text-align: left; cursor: pointer; }
+  .nav:hover { background: var(--muted-bg); }
+  .nav.on { background: var(--primary-soft); color: var(--primary); }
+  .nav .count { margin-left: auto; font-size: 12px; color: var(--muted); }
+  .nav.on .count { color: var(--primary); }
+  .side-foot { margin-top: auto; border-top: 1px solid var(--border); padding: 12px 6px 0; display: flex; align-items: center; gap: 10px; }
+  .avatar { width: 30px; height: 30px; border-radius: 50%; background: var(--sun); color: var(--fg); display: grid; place-items: center; font-weight: 600; font-size: 12px; flex: none; }
+  .avatar.alt { background: var(--primary-soft-2); color: var(--primary); }
+  .side-foot small { display: block; color: var(--muted); font-size: 12px; line-height: 1.2; }
+  .side-foot b { font-size: 13px; font-weight: 600; }
+
+  main { min-width: 0; }
+  .topbar { display: flex; align-items: center; gap: 12px; padding: 12px 24px; border-bottom: 1px solid var(--border); background: var(--card); position: sticky; top: 0; z-index: 5; flex-wrap: wrap; }
+  .seg { display: inline-flex; background: var(--muted-bg); border-radius: 9px; padding: 3px; gap: 2px; }
+  .seg button { border: 0; background: none; padding: 6px 12px; border-radius: 7px; font-weight: 500; color: #606060; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; white-space: nowrap; }
+  .seg button.on { background: var(--card); color: var(--fg); box-shadow: 0 1px 2px rgba(0,0,0,.08); }
+  .seg .n { font-size: 11px; font-weight: 600; width: 18px; height: 18px; border-radius: 5px; display: grid; place-items: center; background: var(--border); color: #4A4A4A; }
+  .seg button.on .n { background: var(--primary); color: #fff; }
+  .clock { margin-left: auto; display: inline-flex; align-items: center; gap: 6px; color: #4A4A4A; font-weight: 500; border: 1px solid var(--border); border-radius: 999px; padding: 5px 11px; background: var(--card); }
+  .content { padding: 24px; max-width: 1120px; }
+
+  /* Primitives */
+  .card { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); box-shadow: var(--shadow); }
+  .card-h { padding: 16px 18px 0; display: flex; align-items: center; gap: 10px; }
+  .card-h h3 { margin: 0; font-size: 14px; font-weight: 600; }
+  .card-h .sp { margin-left: auto; }
+  .card-b { padding: 14px 18px 18px; }
+  .btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; height: 36px; padding: 0 14px; border-radius: 8px; border: 1px solid transparent; font-weight: 500; cursor: pointer; white-space: nowrap; transition: background .12s, border-color .12s; }
+  .btn:focus-visible, .input:focus-visible, select:focus-visible, .check:focus-visible { outline: 2px solid var(--ring); outline-offset: 2px; }
+  .btn-primary { background: var(--primary); color: #fff; }
+  .btn-primary:hover { background: var(--primary-hover); }
+  .btn-primary:disabled { opacity: .45; cursor: not-allowed; }
+  .btn-outline { background: var(--card); border-color: var(--input); }
+  .btn-outline:hover { background: var(--muted-bg); }
+  .btn-ghost { background: transparent; }
+  .btn-ghost:hover { background: var(--muted-bg); }
+  .btn-sm { height: 30px; padding: 0 10px; font-size: 13px; }
+  .badge { display: inline-flex; align-items: center; gap: 5px; height: 22px; padding: 0 8px; border-radius: 999px; font-size: 12px; font-weight: 500; border: 1px solid transparent; white-space: nowrap; }
+  .b-neutral { background: var(--muted-bg); color: #4A4A4A; border-color: var(--border); }
+  .b-primary { background: var(--primary-soft); color: var(--primary); border-color: var(--primary-soft-2); }
+  .b-ok { background: var(--pine-soft); color: var(--pine); border-color: var(--pine-line); }
+  .b-warn { background: var(--sun-soft); color: var(--sun-ink); border-color: var(--sun-line); }
+  .b-bad { background: var(--maple-soft); color: var(--maple); border-color: var(--maple-line); }
+  .b-info { background: var(--sky-soft); color: var(--sky); border-color: var(--sky-line); }
+  .dot { width: 7px; height: 7px; border-radius: 50%; background: currentColor; }
+  select, .input { height: 36px; border: 1px solid var(--input); border-radius: 8px; padding: 0 10px; background: var(--card); width: 100%; }
+  select { appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%237B7B7B' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 10px center; background-size: 14px; padding-right: 30px; }
+  .label { font-size: 12px; font-weight: 500; color: #606060; margin-bottom: 6px; display: block; }
+  .muted { color: var(--muted); }
+  .sep { height: 1px; background: var(--border); margin: 0; border: 0; }
+
+  /* Page header */
+  .ph { display: flex; align-items: flex-start; gap: 16px; margin-bottom: 18px; flex-wrap: wrap; }
+  .ph h1 { margin: 0; font-size: 22px; font-weight: 650; letter-spacing: -.02em; }
+  .ph .meta { display: flex; gap: 6px; margin-top: 8px; flex-wrap: wrap; }
+  .ph .actions { margin-left: auto; display: flex; gap: 8px; }
+  .crumb { color: var(--muted); font-size: 13px; display: flex; align-items: center; gap: 4px; margin-bottom: 4px; }
+
+  /* Stepper */
+  .steps { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; margin-bottom: 16px; }
+  .stp { display: flex; align-items: center; gap: 10px; padding: 12px 14px; }
+  .stp .ic { width: 28px; height: 28px; border-radius: 50%; display: grid; place-items: center; border: 1.5px solid var(--input); color: var(--muted); flex: none; }
+  .stp.done .ic { background: var(--pine); border-color: var(--pine); color: #fff; }
+  .stp.now .ic { border-color: var(--primary); color: var(--primary); background: var(--primary-soft); }
+  .stp b { display: block; font-size: 13px; font-weight: 600; }
+  .stp small { color: var(--muted); font-size: 12px; }
+  .bar { height: 4px; background: var(--muted-bg); border-radius: 99px; overflow: hidden; margin-top: 6px; }
+  .bar i { display: block; height: 100%; background: var(--pine); border-radius: 99px; transition: width .3s; }
+
+  /* Lines */
+  .grid2 { display: grid; grid-template-columns: minmax(0, 1fr) 320px; gap: 16px; align-items: start; }
+  .line { display: grid; grid-template-columns: 40px minmax(0, 1fr) 190px; gap: 12px; align-items: center; padding: 12px 0; border-top: 1px solid var(--border); }
+  .line:first-child { border-top: 0; }
+  .thumb { width: 40px; height: 40px; border-radius: 9px; background: var(--muted-bg); display: grid; place-items: center; color: #4A4A4A; }
+  .line b { font-weight: 600; display: block; }
+  .line small { color: var(--muted); font-size: 12.5px; display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+  .hint { margin-top: 6px; font-size: 12.5px; display: flex; align-items: center; gap: 6px; }
+  .hint.warn { color: var(--sun-ink); }
+  .hint.bad { color: var(--maple); }
+  .hint.ok { color: var(--pine); }
+
+  .kv { display: grid; gap: 12px; }
+  .kv .row { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+  .kv .row span:first-child { color: var(--muted); }
+  .person { display: flex; align-items: center; gap: 10px; padding: 10px; border: 1px solid var(--border); border-radius: 9px; }
+  .person b { display: block; font-weight: 600; font-size: 13.5px; }
+  .person small { color: var(--muted); font-size: 12px; }
+
+  /* Return checklist */
+  .check { width: 18px; height: 18px; border-radius: 5px; border: 1.5px solid var(--input); background: var(--card); display: grid; place-items: center; cursor: pointer; padding: 0; color: #fff; }
+  .check.on { background: var(--primary); border-color: var(--primary); }
+  .ret-line { display: grid; grid-template-columns: 18px 40px minmax(0, 1fr) auto; gap: 12px; align-items: center; padding: 12px 0; border-top: 1px solid var(--border); }
+  .ret-line:first-child { border-top: 0; }
+  .ret-line b { font-weight: 600; display: block; }
+  .ret-line small { color: var(--muted); font-size: 12.5px; }
+  .still { margin: 0 0 12px 30px; padding: 12px; border-radius: 9px; background: var(--sun-soft); border: 1px solid var(--sun-line); display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+  .summary { display: flex; align-items: center; gap: 10px; padding: 14px 18px; border-top: 1px solid var(--border); background: #FCFCFC; border-radius: 0 0 var(--radius) var(--radius); flex-wrap: wrap; }
+  .summary .sp { margin-left: auto; }
+
+  /* Timeline */
+  .tl { list-style: none; margin: 0; padding: 0; }
+  .tl li { display: grid; grid-template-columns: 28px minmax(0, 1fr); gap: 10px; padding-bottom: 14px; position: relative; }
+  .tl li::before { content: ""; position: absolute; left: 13.5px; top: 28px; bottom: 0; width: 1px; background: var(--border); }
+  .tl li:last-child::before { display: none; }
+  .tl .tdot { width: 28px; height: 28px; border-radius: 50%; display: grid; place-items: center; background: var(--muted-bg); color: #4A4A4A; }
+  .tl .tdot.ok { background: var(--pine-soft); color: var(--pine); }
+  .tl .tdot.warn { background: var(--sun-soft); color: var(--sun-ink); }
+  .tl .tdot.pri { background: var(--primary-soft); color: var(--primary); }
+  .tl b { font-weight: 600; font-size: 13px; display: block; }
+  .tl small { color: var(--muted); font-size: 12px; display: flex; align-items: center; gap: 6px; }
+  .mini-av { width: 16px; height: 16px; border-radius: 50%; display: inline-grid; place-items: center; font-size: 9px; font-weight: 700; background: var(--sun); color: var(--fg); }
+  .mini-av.alt { background: var(--primary-soft-2); color: var(--primary); }
+
+  /* Scan */
+  .scanbox { display: flex; align-items: center; gap: 10px; border: 1.5px solid var(--input); border-radius: 12px; padding: 0 8px 0 14px; height: 56px; background: var(--card); }
+  .scanbox:focus-within { border-color: var(--primary); box-shadow: 0 0 0 3px var(--primary-soft-2); }
+  .scanbox input { border: 0; outline: 0; flex: 1; font-size: 17px; font-weight: 500; letter-spacing: .02em; background: transparent; min-width: 0; }
+  .chips { display: flex; gap: 6px; margin-top: 10px; flex-wrap: wrap; align-items: center; }
+  .chip { border: 1px dashed var(--input); background: var(--card); border-radius: 7px; height: 28px; padding: 0 10px; font: 500 12.5px var(--font); cursor: pointer; color: #4A4A4A; }
+  .chip:hover { border-style: solid; }
+  .hit { margin-top: 14px; }
+  .hit-h { display: flex; gap: 14px; align-items: center; padding: 18px; }
+  .hit-h .thumb { width: 52px; height: 52px; border-radius: 12px; }
+  .hit-h b { font-size: 16px; font-weight: 650; display: block; letter-spacing: -.01em; }
+  .facts { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); border-top: 1px solid var(--border); }
+  .facts div { padding: 12px 18px; border-left: 1px solid var(--border); }
+  .facts div:first-child { border-left: 0; }
+  .facts span { display: block; font-size: 12px; color: var(--muted); }
+  .facts b { font-weight: 600; font-size: 13.5px; }
+  .alert { display: flex; gap: 12px; padding: 14px 16px; border-radius: var(--radius); border: 1px solid; margin-top: 14px; align-items: flex-start; }
+  .alert b { display: block; font-weight: 600; }
+  .alert.bad { background: var(--maple-soft); border-color: var(--maple-line); color: var(--maple); }
+  .alert.bad span { color: #730F00; }
+  .alert.ok { background: var(--pine-soft); border-color: var(--pine-line); color: var(--pine); }
+  .alert.ok span { color: #00413E; }
+  .alert.info { background: var(--sky-soft); border-color: var(--sky-line); color: var(--sky); }
+  .alert.info span { color: #112040; }
+  .tbl { width: 100%; border-collapse: collapse; }
+  .tbl td { padding: 10px 18px; border-top: 1px solid var(--border); vertical-align: middle; }
+  .tbl tr:first-child td { border-top: 0; }
+  .tbl b { font-weight: 600; display: block; font-size: 13.5px; }
+  .tbl small { color: var(--muted); font-size: 12px; }
+  .tbl td:last-child { text-align: right; }
+
+  /* Principles strip */
+  .why { display: flex; gap: 6px; flex-wrap: wrap; align-items: center; margin-top: 18px; padding-top: 14px; border-top: 1px dashed var(--input); }
+  .why .muted { font-size: 12px; margin-right: 4px; }
+
+  /* Toast */
+  .toast { position: fixed; right: 20px; bottom: 20px; background: var(--fg); color: #fff; border-radius: 10px; padding: 12px 12px 12px 14px; display: flex; align-items: center; gap: 12px; box-shadow: 0 10px 30px rgba(0,0,0,.18); transform: translateY(120%); opacity: 0; transition: transform .2s, opacity .2s; z-index: 20; max-width: calc(100vw - 40px); }
+  .toast.show { transform: none; opacity: 1; }
+  .toast .btn { height: 28px; background: #3a3a3a; color: #fff; border-color: #4A4A4A; }
+  .toast .btn:hover { background: #4A4A4A; }
+  .toast svg.i { color: var(--sun); }
+
+  @media (max-width: 980px) { .grid2 { grid-template-columns: 1fr; } }
+  @media (max-width: 760px) {
+    .app { grid-template-columns: 1fr; }
+    aside.side { position: static; height: auto; flex-direction: row; align-items: center; padding: 8px 12px; overflow-x: auto; gap: 2px; border-right: 0; border-bottom: 1px solid var(--border); }
+    .brand { padding: 0 8px 0 0; }
+    .brand small, .nav-label, .side-foot, .nav .count { display: none; }
+    .nav { width: auto; padding: 7px 9px; }
+    .nav span { display: none; }
+    .topbar { padding: 10px 16px; position: static; }
+    .seg { width: 100%; overflow-x: auto; }
+    .seg button { flex: 1; justify-content: center; padding: 6px 8px; }
+    .seg .t { display: none; }
+    .clock { margin-left: 0; }
+    .content { padding: 16px; }
+    .steps { grid-template-columns: 1fr; }
+    .line { grid-template-columns: 40px minmax(0, 1fr); }
+    .line > :last-child { grid-column: 1 / -1; }
+    .still { margin-left: 0; grid-template-columns: 1fr; }
+    .facts { grid-template-columns: 1fr; }
+    .facts div { border-left: 0; border-top: 1px solid var(--border); }
+    .facts div:first-child { border-top: 0; }
+    .ph .actions { margin-left: 0; }
+  }
+  @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+</style>
+</head>
+<body>
+<!-- Icons: Lucide (ISC), see third-party/lucide-LICENSE.txt; device glyphs from the app's own index.html -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="clipboard" viewBox="0 0 24 24"><rect width="8" height="4" x="8" y="2" rx="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><path d="M12 11h4"/><path d="M12 16h4"/><path d="M8 11h.01"/><path d="M8 16h.01"/></symbol>
+  <symbol id="package" viewBox="0 0 24 24"><path d="M11 21.73a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73z"/><path d="M12 22V12"/><polyline points="3.29 7 12 12 20.71 7"/><path d="m7.5 4.27 9 5.15"/></symbol>
+  <symbol id="scan" viewBox="0 0 24 24"><path d="M3 7V5a2 2 0 0 1 2-2h2"/><path d="M17 3h2a2 2 0 0 1 2 2v2"/><path d="M21 17v2a2 2 0 0 1-2 2h-2"/><path d="M7 21H5a2 2 0 0 1-2-2v-2"/><path d="M7 12h10"/></symbol>
+  <symbol id="history" viewBox="0 0 24 24"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/><path d="M12 7v5l4 2"/></symbol>
+  <symbol id="check" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></symbol>
+  <symbol id="clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></symbol>
+  <symbol id="user" viewBox="0 0 24 24"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></symbol>
+  <symbol id="undo" viewBox="0 0 24 24"><path d="M9 14 4 9l5-5"/><path d="M4 9h10.5a5.5 5.5 0 0 1 5.5 5.5a5.5 5.5 0 0 1-5.5 5.5H11"/></symbol>
+  <symbol id="alert" viewBox="0 0 24 24"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3"/><path d="M12 9v4"/><path d="M12 17h.01"/></symbol>
+  <symbol id="circle-check" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></symbol>
+  <symbol id="chev" viewBox="0 0 24 24"><path d="m9 18 6-6-6-6"/></symbol>
+  <symbol id="arrow" viewBox="0 0 24 24"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></symbol>
+  <symbol id="out" viewBox="0 0 24 24"><path d="M7 7h10v10"/><path d="M7 17 17 7"/></symbol>
+  <symbol id="in" viewBox="0 0 24 24"><path d="M17 7 7 17"/><path d="M17 17H7V7"/></symbol>
+  <symbol id="link" viewBox="0 0 24 24"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></symbol>
+  <symbol id="grid" viewBox="0 0 24 24"><rect width="7" height="9" x="3" y="3" rx="1"/><rect width="7" height="5" x="14" y="3" rx="1"/><rect width="7" height="9" x="14" y="12" rx="1"/><rect width="7" height="5" x="3" y="16" rx="1"/></symbol>
+  <symbol id="projector" viewBox="0 0 24 24"><rect x="2.5" y="4" width="19" height="13" rx="1.5"/><path d="M8 21h8m-4-4v4m-2-14 5 3.5-5 3.5z"/></symbol>
+  <symbol id="speaker" viewBox="0 0 24 24"><rect x="5" y="2.5" width="14" height="19" rx="2"/><circle cx="12" cy="14" r="3.5"/><path d="M12 6.5h.01"/></symbol>
+  <symbol id="adapter" viewBox="0 0 24 24"><rect x="4" y="3" width="8" height="5" rx="1"/><path d="M8 8v5a3 3 0 0 0 3 3h5m2-3h4v6h-4a2 2 0 0 1-2-2v-2a2 2 0 0 1 2-2Z"/></symbol>
+  <symbol id="mic" viewBox="0 0 24 24"><rect x="9" y="2.5" width="6" height="12" rx="3"/><path d="M5.5 11.5a6.5 6.5 0 0 0 13 0M12 18v3m-3 0h6"/></symbol>
+  <symbol id="camera" viewBox="0 0 24 24"><path d="M3 8h4l2-3h6l2 3h4v12H3z"/><circle cx="12" cy="13.5" r="3"/></symbol>
+</svg>
+
+<div class="app">
+  <aside class="side" aria-label="Main navigation">
+    <div class="brand">
+      <div class="mark"><svg class="i lg"><use href="#package"/></svg></div>
+      <div><b>Campus Stores</b><small>Media desk</small></div>
+    </div>
+    <div class="nav-label">Desk</div>
+    <button class="nav" data-go="A" type="button"><svg class="i"><use href="#clipboard"/></svg><span>Requests</span><em class="count" style="font-style:normal">3</em></button>
+    <button class="nav" data-go="C" type="button"><svg class="i"><use href="#scan"/></svg><span>Counter</span></button>
+    <button class="nav" type="button" disabled style="opacity:.55;cursor:default"><svg class="i"><use href="#grid"/></svg><span>Inventory</span><em class="count" style="font-style:normal">8</em></button>
+    <button class="nav" type="button" disabled style="opacity:.55;cursor:default"><svg class="i"><use href="#history"/></svg><span>Activity</span></button>
+    <div class="side-foot">
+      <div class="avatar" id="clerkAv">AN</div>
+      <div><small>On desk</small><b id="clerkName">Ananya</b></div>
+    </div>
+  </aside>
+
+  <main>
+    <div class="topbar">
+      <div class="seg" role="tablist" aria-label="Prototype">
+        <button type="button" role="tab" data-proto="A"><span class="n">A</span><span class="t">Issue kit</span></button>
+        <button type="button" role="tab" data-proto="B"><span class="n">B</span><span class="t">Return</span></button>
+        <button type="button" role="tab" data-proto="C"><span class="n">C</span><span class="t">Check in</span></button>
+      </div>
+      <span class="clock"><svg class="i"><use href="#clock"/></svg><span id="clockTxt">Fri 3:45 pm</span></span>
+    </div>
+    <div class="content" id="view"></div>
+  </main>
+</div>
+
+<div class="toast" id="toast" role="status" aria-live="polite"><svg class="i"><use href="#circle-check"/></svg><span id="toastTxt"></span><button class="btn btn-sm" id="toastUndo" type="button"><svg class="i"><use href="#undo"/></svg>Undo</button></div>
+
+<script>
+(() => {
+  const UNITS = {
+    "PR-04": { type: "HDMI projector", model: "BenQ MH550", bin: "A2", icon: "projector" },
+    "PR-06": { type: "HDMI projector", model: "Epson EB-X49", bin: "Workshop", icon: "projector", repair: true },
+    "SP-02": { type: "Portable speaker", model: "JBL Eon One", bin: "B1", icon: "speaker" },
+    "SP-05": { type: "Portable speaker", model: "Bose S1", bin: "B2", icon: "speaker" },
+    "AD-12": { type: "USB-C → HDMI adapter", model: "Belkin AVC002", bin: "C4", icon: "adapter" },
+    "AD-15": { type: "USB-C → HDMI adapter", model: "Anker A8312", bin: "C4", icon: "adapter" },
+    "MI-09": { type: "Wireless microphone", model: "Shure BLX", bin: "B3", icon: "mic" },
+    "CA-03": { type: "Digital camera", model: "Sony A6400", bin: "D2", icon: "camera" },
+  };
+  const LINES = [
+    { type: "HDMI projector", opts: ["PR-04", "PR-06"] },
+    { type: "Portable speaker", opts: ["SP-02", "SP-05"] },
+    { type: "USB-C → HDMI adapter", opts: ["AD-12", "AD-15"] },
+  ];
+  const CLERKS = { A: ["AN", "Ananya", ""], B: ["AN", "Ananya", ""], C: ["RO", "Rohan", "alt"] };
+  const TIME = { A: "Fri 3:45 pm", B: "Fri 7:30 pm", C: "Sat 9:00 am" };
+
+  const fresh = () => ({
+    proto: "A",
+    pick: ["PR-04", "SP-02", "AD-12"],
+    collector: "Kabir Sen",
+    issued: false,
+    back: { 0: true, 1: true, 2: false },
+    holder: "Leela Das",
+    expected: "Sat 9 am",
+    returned: false,
+    scan: "",
+    checkedIn: false,
+    log: [],
+  });
+  let S = fresh();
+  let undoFn = null, toastTimer = null;
+  const $ = (s) => document.querySelector(s);
+  const ic = (id, cls = "") => `<svg class="i ${cls}"><use href="#${id}"/></svg>`;
+  const unit = (id) => UNITS[id];
+  const stamp = (proto) => ({ who: CLERKS[proto][1], av: CLERKS[proto][0], alt: CLERKS[proto][2], at: TIME[proto] });
+
+  // Keep each prototype usable on its own: fill in earlier steps with defaults.
+  function ensure(p) {
+    if ((p === "B" || p === "C") && !S.issued) doIssue(true);
+    if (p === "C" && !S.returned) doReturn(true);
+  }
+  function doIssue(silent) {
+    S.issued = true;
+    S.log.push({ ...stamp("A"), kind: "pri", icon: "out", t: `Issued 3 items to ${S.collector}`, d: "Proxy for Isha Rao" });
+    if (!silent) toast(`3 items issued to ${S.collector}`, () => { S.issued = false; S.log.pop(); render(); });
+  }
+  function doReturn(silent) {
+    S.returned = true;
+    const backN = [0, 1, 2].filter((i) => S.back[i]).length;
+    S.log.push({ ...stamp("B"), kind: "ok", icon: "in", t: `${backN} returned by Kabir Sen`, d: [0, 1, 2].filter((i) => S.back[i]).map((i) => S.pick[i]).join(", ") });
+    const out = [0, 1, 2].filter((i) => !S.back[i]);
+    out.forEach((i) => S.log.push({ ...stamp("B"), kind: "warn", icon: "user", t: `${S.pick[i]} still out · ${S.holder}`, d: `Expected ${S.expected}` }));
+    if (!silent) toast(out.length ? `${backN} back · ${out.length} still out with ${S.holder}` : "Kit fully returned", () => { S.returned = false; S.log.splice(-(1 + out.length)); render(); });
+  }
+
+  function toast(msg, undo) {
+    $("#toastTxt").textContent = msg;
+    undoFn = undo;
+    $("#toastUndo").hidden = !undo;
+    $("#toast").classList.add("show");
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => { $("#toast").classList.remove("show"); undoFn = null; }, 6000);
+  }
+  $("#toastUndo").addEventListener("click", () => { if (undoFn) undoFn(); undoFn = null; $("#toast").classList.remove("show"); });
+
+  // ---------- shared pieces ----------
+  function header(stage) {
+    const issuedN = S.issued ? 3 : 0;
+    const backN = S.returned ? [0, 1, 2].filter((i) => S.back[i]).length + (S.checkedIn ? 1 : 0) : 0;
+    const status = S.checkedIn ? ["b-ok", "Complete"] : S.returned ? ["b-warn", "Partly back"] : S.issued ? ["b-info", "Out"] : ["b-neutral", "Approved"];
+    return `
+      <div class="crumb">Requests ${ic("chev")} RQ-214</div>
+      <div class="ph">
+        <div>
+          <h1>Courtyard screening</h1>
+          <div class="meta">
+            <span class="badge b-primary">Film Society</span>
+            <span class="badge b-neutral">${ic("clock")}Due Fri 8 pm</span>
+            <span class="badge ${status[0]}"><span class="dot"></span>${status[1]}</span>
+          </div>
+        </div>
+      </div>
+      <div class="steps">
+        ${stepCard("Approved", "Isha Rao", 3, 3, "done")}
+        ${stepCard("Issued", issuedN ? `${issuedN} of 3` : "Not yet", issuedN, 3, issuedN === 3 ? "done" : stage === "A" ? "now" : "")}
+        ${stepCard("Returned", S.returned ? `${backN} of 3` : "Not yet", backN, 3, backN === 3 ? "done" : stage !== "A" ? "now" : "")}
+      </div>`;
+  }
+  function stepCard(title, sub, n, of, cls) {
+    return `<div class="card stp ${cls}"><div class="ic">${cls === "done" ? ic("check") : n}</div><div style="flex:1;min-width:0"><b>${title}</b><small>${sub}</small><div class="bar"><i style="width:${(n / of) * 100}%"></i></div></div></div>`;
+  }
+  function timeline() {
+    const items = [{ who: "Isha Rao", av: "IR", alt: "alt", at: "Fri 3:20 pm", kind: "", icon: "link", t: "Kabir Sen may collect", d: "Proxy note" }, ...S.log];
+    return `<div class="card"><div class="card-h">${ic("history")}<h3>Activity</h3></div><div class="card-b"><ul class="tl">${items.slice().reverse().map((e) => `
+      <li><div class="tdot ${e.kind}">${ic(e.icon)}</div><div><b>${e.t}</b><small><span class="mini-av ${e.alt}">${e.av[0]}</span>${e.who} · ${e.at}${e.d ? " · " + e.d : ""}</small></div></li>`).join("")}</ul></div></div>`;
+  }
+  function why(iters, principles) {
+    return `<div class="why"><span class="muted">Iterations</span>${iters.map((n) => `<span class="badge b-primary">${n}</span>`).join("")}<span class="muted" style="margin-left:10px">inFlow principles</span>${principles.map((p) => `<span class="badge b-neutral">${p}</span>`).join("")}</div>`;
+  }
+
+  // ---------- A · Issue kit ----------
+  function viewA() {
+    const busy = (id) => S.pick.includes(id);
+    const lines = LINES.map((L, i) => {
+      const sel = S.pick[i], u = unit(sel);
+      const hint = u.repair ? `<div class="hint bad">${ic("alert")}In repair. Pick another unit.</div>` : "";
+      const options = L.opts.map((id) => `<option value="${id}" ${id === sel ? "selected" : ""} ${unit(id).repair ? "disabled" : ""}>${id} · ${unit(id).repair ? "In repair" : "Bin " + unit(id).bin}</option>`).join("");
+      return `<div class="line">
+        <div class="thumb">${ic(u.icon, "lg")}</div>
+        <div><b>${L.type}</b><small>${u.model} · Bin ${u.bin} ${S.issued ? `<span class="badge b-info">${ic("out")}Out</span>` : `<span class="badge b-ok"><span class="dot"></span>Held</span>`}</small>${hint}</div>
+        <div>${S.issued ? `<span class="badge b-neutral" style="height:30px;padding:0 12px">${sel}</span>` : `<select data-line="${i}" aria-label="Unit for ${L.type}">${options}</select>`}</div>
+      </div>`;
+    }).join("");
+    const bad = S.pick.some((id) => unit(id).repair) || new Set(S.pick).size !== 3;
+    const linked = S.collector === "Kabir Sen" || S.collector === "Isha Rao";
+    return `${header("A")}
+      <div class="grid2">
+        <div class="card">
+          <div class="card-h">${ic("package")}<h3>Kit</h3><span class="sp badge b-neutral">3 items</span></div>
+          <div class="card-b">${lines}</div>
+          <div class="summary">
+            ${S.issued ? `<span class="badge b-ok">${ic("check")}Issued · Fri 3:47 pm</span><button class="btn btn-outline sp" data-go="B" type="button">Go to return ${ic("arrow")}</button>` :
+              `<span class="muted">Due back</span><b>Fri 8 pm</b><span class="badge b-neutral">From approval</span><button class="btn btn-primary sp" id="issueBtn" type="button" ${bad || !linked ? "disabled" : ""}>${ic("out")}Issue 3 items</button>`}
+          </div>
+        </div>
+        <div class="kv">
+          <div class="card"><div class="card-h">${ic("user")}<h3>Collector</h3></div><div class="card-b kv">
+            ${S.issued ? "" : `<select id="collector" aria-label="Collector">${["Kabir Sen", "Isha Rao", "Leela Das", "Dev Menon"].map((p) => `<option ${p === S.collector ? "selected" : ""}>${p}</option>`).join("")}</select>`}
+            <div class="person"><div class="avatar alt">${S.collector.split(" ").map((x) => x[0]).join("")}</div><div style="flex:1"><b>${S.collector}</b><small>${S.collector === "Isha Rao" ? "Filed the request" : linked ? "Proxy for Isha Rao" : "Not linked to RQ-214"}</small></div>${linked ? `<span class="badge b-ok">${ic("link")}Linked</span>` : `<span class="badge b-warn">${ic("alert")}Check</span>`}</div>
+            ${linked ? "" : `<div class="hint warn">${ic("alert")}Confirm with Isha Rao before issuing.</div>`}
+          </div></div>
+          ${timeline()}
+        </div>
+      </div>
+      ${why(["1", "4", "5", "6"], ["Order is the workspace", "Pick reserves stock", "Warn before commit"])}`;
+  }
+
+  // ---------- B · Return ----------
+  function viewB() {
+    const rows = LINES.map((L, i) => {
+      const id = S.pick[i], u = unit(id), on = !!S.back[i];
+      const row = `<div class="ret-line">
+        <button type="button" class="check ${on ? "on" : ""}" data-back="${i}" role="checkbox" aria-checked="${on}" aria-label="${L.type} returned" ${S.returned ? "disabled" : ""}>${on ? ic("check") : ""}</button>
+        <div class="thumb">${ic(u.icon, "lg")}</div>
+        <div><b>${L.type}</b><small>${id} · ${u.model}</small></div>
+        ${on ? `<span class="badge b-ok">${ic("in")}Back</span>` : `<span class="badge b-warn"><span class="dot"></span>Still out</span>`}
+      </div>`;
+      const still = !on && !S.returned ? `<div class="still">
+        <div><span class="label">With</span><select data-f="holder">${["Leela Das", "Kabir Sen", "Isha Rao"].map((p) => `<option ${p === S.holder ? "selected" : ""}>${p}</option>`).join("")}</select></div>
+        <div><span class="label">Expected back</span><select data-f="expected">${["Sat 9 am", "Sat 10 am", "Sat noon"].map((p) => `<option ${p === S.expected ? "selected" : ""}>${p}</option>`).join("")}</select></div>
+      </div>` : !on && S.returned ? `<div class="still" style="grid-template-columns:1fr"><div style="display:flex;gap:8px;align-items:center;color:var(--sun-ink)">${ic("user")}<b style="font-weight:600">With ${S.holder}</b><span>· expected ${S.expected}</span></div></div>` : "";
+      return row + still;
+    }).join("");
+    const backN = [0, 1, 2].filter((i) => S.back[i]).length;
+    return `${header("B")}
+      <div class="grid2">
+        <div class="card">
+          <div class="card-h">${ic("in")}<h3>Return</h3><span class="sp muted">Returned by</span><span class="badge b-primary">Kabir Sen</span></div>
+          <div class="card-b">${rows}</div>
+          <div class="summary">
+            <span class="badge b-ok">${backN} back</span>${3 - backN ? `<span class="badge b-warn">${3 - backN} still out</span>` : ""}
+            ${S.returned ? `<button class="btn btn-outline sp" data-go="C" type="button">Next morning ${ic("arrow")}</button>` : `<button class="btn btn-primary sp" id="returnBtn" type="button" ${backN ? "" : "disabled"}>${ic("check")}Record return</button>`}
+          </div>
+        </div>
+        ${timeline()}
+      </div>
+      ${why(["2", "6"], ["Partial = Started", "Reversible + dated", "Every change has an owner"])}`;
+  }
+
+  // ---------- C · Check in ----------
+  function viewC() {
+    const outIds = [0, 1, 2].filter((i) => !S.back[i]).map((i) => S.pick[i]);
+    const open = {};
+    if (!S.checkedIn) outIds.forEach((id) => (open[id] = { req: "RQ-214 · Film Society", holder: S.holder, due: "Fri 8 pm", exp: S.expected, badge: ["b-bad", "Overdue 13 h"] }));
+    if (!S.micIn) open["MI-09"] = { req: "RQ-209 · Debate Union", holder: "Tara Shah", due: "Sat 10 am", exp: "Sat 10 am", badge: ["b-info", "Due in 1 h"] };
+    const q = S.scan.trim().toUpperCase();
+    let hit = "";
+    if (S.justIn) {
+      hit = `<div class="alert ok">${ic("circle-check", "lg")}<div><b>${S.justIn} checked in</b><span>Back to bin ${unit(S.justIn).bin}.${S.justIn === "MI-09" ? "" : " RQ-214 complete."}</span></div></div>`;
+    } else if (q && open[q]) {
+      const o = open[q], u = unit(q);
+      hit = `<div class="card hit">
+        <div class="hit-h"><div class="thumb">${ic(u.icon, "xl")}</div><div style="flex:1;min-width:0"><b>${u.type}</b><span class="muted">${q} · ${u.model}</span></div><span class="badge ${o.badge[0]}">${o.badge[1]}</span></div>
+        <div class="facts"><div><span>Request</span><b>${o.req}</b></div><div><span>With</span><b>${o.holder}</b></div><div><span>Expected</span><b>${o.exp}</b></div></div>
+        <div class="summary"><span class="muted">${ic("user")}</span><span>From</span><b>${o.holder}</b><button class="btn btn-primary sp" id="checkInBtn" data-id="${q}" type="button">${ic("in")}Check in ${q}</button></div>
+      </div>`;
+    } else if (q && unit(q)) {
+      const sib = Object.keys(open).find((id) => unit(id).type === unit(q).type);
+      hit = `<div class="alert bad">${ic("alert", "lg")}<div><b>No open loan for ${q}</b><span>${sib ? `Film Society has <b>${sib}</b>. Same type, different unit.` : `${q} is on its shelf.`}</span></div></div>`;
+    } else if (q) {
+      hit = `<div class="alert info">${ic("alert", "lg")}<div><b>Unknown label</b><span>Check the sticker and try again.</span></div></div>`;
+    }
+    const rows = Object.entries(open).map(([id, o]) => `<tr><td style="width:52px"><div class="thumb" style="width:34px;height:34px">${ic(unit(id).icon)}</div></td><td><b>${unit(id).type}</b><small>${id} · ${o.holder}</small></td><td><span class="badge ${o.badge[0]}">${o.badge[1]}</span></td></tr>`).join("");
+    return `<div class="ph"><div><div class="crumb">Counter</div><h1>Check in</h1></div></div>
+      <div class="grid2">
+        <div>
+          <div class="scanbox">${ic("scan", "lg")}<input id="scanIn" placeholder="Scan or type a label" value="${S.scan.replace(/[&<>"']/g, "")}" autocomplete="off" aria-label="Unit label" /><button class="btn btn-primary" id="scanGo" type="button">Find</button></div>
+          <div class="chips"><span class="muted" style="font-size:12px">Try</span>${["AD-12", "AD-15", "MI-09"].map((x) => `<button class="chip" type="button" data-try="${x}">${x}</button>`).join("")}</div>
+          <div class="hit">${hit}</div>
+          <div class="card" style="margin-top:16px"><div class="card-h"><h3>Outstanding</h3><span class="sp badge b-neutral">${Object.keys(open).length}</span></div><div class="card-b" style="padding:8px 0 4px"><table class="tbl">${rows}</table></div></div>
+        </div>
+        ${timeline()}
+      </div>
+      ${why(["3", "6"], ["Scan to verify", "Show only what's wrong", "Every change has an owner"])}`;
+  }
+
+  // ---------- render + events ----------
+  function render() {
+    const p = S.proto;
+    document.querySelectorAll("[data-proto]").forEach((b) => { b.classList.toggle("on", b.dataset.proto === p); b.setAttribute("aria-selected", b.dataset.proto === p); });
+    document.querySelectorAll(".nav[data-go]").forEach((b) => b.classList.toggle("on", (p === "C") === (b.dataset.go === "C")));
+    $("#clockTxt").textContent = TIME[p];
+    const [av, name, alt] = CLERKS[p];
+    $("#clerkAv").textContent = av; $("#clerkAv").className = "avatar " + alt; $("#clerkName").textContent = name;
+    $("#view").innerHTML = p === "A" ? viewA() : p === "B" ? viewB() : viewC();
+  }
+  function go(p) {
+    // An undo only makes sense on the screen that made the change.
+    $("#toast").classList.remove("show"); undoFn = null;
+    ensure(p); S.proto = p; render(); window.scrollTo({ top: 0 }); }
+
+  document.addEventListener("click", (e) => {
+    const t = e.target.closest("button");
+    if (!t) return;
+    if (t.dataset.proto) return go(t.dataset.proto);
+    if (t.dataset.go) return go(t.dataset.go);
+    if (t.id === "issueBtn") { doIssue(false); return render(); }
+    if (t.id === "returnBtn") { doReturn(false); return render(); }
+    if (t.dataset.back !== undefined) { S.back[t.dataset.back] = !S.back[t.dataset.back]; return render(); }
+    if (t.dataset.try) { S.scan = t.dataset.try; S.justIn = null; return render(); }
+    if (t.id === "scanGo") { S.scan = $("#scanIn").value; S.justIn = null; return render(); }
+    if (t.id === "checkInBtn") {
+      const id = t.dataset.id;
+      if (id === "MI-09") {
+        S.micIn = true; S.justIn = id;
+        S.log.push({ ...stamp("C"), kind: "ok", icon: "scan", t: "MI-09 checked in · scanned", d: "From Tara Shah" });
+        toast("MI-09 checked in", () => { S.micIn = false; S.justIn = null; S.log.pop(); render(); });
+        return render();
+      }
+      S.checkedIn = true; S.justIn = id;
+      S.log.push({ ...stamp("C"), kind: "ok", icon: "scan", t: `${id} checked in · scanned`, d: `From ${S.holder}` });
+      toast(`${id} checked in. RQ-214 complete`, () => { S.checkedIn = false; S.justIn = null; S.log.pop(); render(); });
+      return render();
+    }
+  });
+  document.addEventListener("change", (e) => {
+    const t = e.target;
+    if (t.dataset.line !== undefined) { S.pick[t.dataset.line] = t.value; return render(); }
+    if (t.id === "collector") { S.collector = t.value; return render(); }
+    if (t.dataset.f) { S[t.dataset.f] = t.value; return render(); }
+  });
+  document.addEventListener("keydown", (e) => {
+    if (e.target.id === "scanIn" && e.key === "Enter") { S.scan = e.target.value; S.justIn = null; render(); const el = $("#scanIn"); if (el) { el.focus(); el.setSelectionRange(el.value.length, el.value.length); } }
+  });
+
+  render();
+})();
+</script>
+</body>
+</html>

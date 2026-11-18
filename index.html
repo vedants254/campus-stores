@@ -6,7 +6,7 @@
     <title>Campus Stores · Media equipment desk</title>
     <meta
       name="description"
-      content="Work a shift at a fictional campus equipment desk in this interactive product engineering exercise."
+      content="Issue media equipment, record returns, and hand over open loans at the campus desk."
     />
     <link rel="stylesheet" href="./styles.css" />
     <script defer src="./app.js"></script>
@@ -19,18 +19,6 @@
       aria-hidden="true"
       class="icon-library"
     >
-      <symbol id="icon-package-open" viewBox="0 0 24 24">
-        <path d="M12 22v-9" />
-        <path
-          d="M15.17 2.21a1.67 1.67 0 0 1 1.63 0L21 4.57a1.93 1.93 0 0 1 0 3.36L8.82 14.79a1.655 1.655 0 0 1-1.64 0L3 12.43a1.93 1.93 0 0 1 0-3.36z"
-        />
-        <path
-          d="M20 13v3.87a2.06 2.06 0 0 1-1.11 1.83l-6 3.08a1.93 1.93 0 0 1-1.78 0l-6-3.08A2.06 2.06 0 0 1 4 16.87V13"
-        />
-        <path
-          d="M21 12.43a1.93 1.93 0 0 0 0-3.36L8.83 2.2a1.64 1.64 0 0 0-1.63 0L3 4.57a1.93 1.93 0 0 0 0 3.36l12.18 6.86a1.636 1.636 0 0 0 1.63 0z"
-        />
-      </symbol>
       <symbol id="icon-package" viewBox="0 0 24 24">
         <path
           d="M11 21.73a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73z"
@@ -63,74 +51,85 @@
           d="M20 9a2 2 0 0 1 2 2v10.286a.71.71 0 0 1-1.212.502l-2.202-2.202A2 2 0 0 0 17.172 19H10a2 2 0 0 1-2-2v-1"
         />
       </symbol>
+      <symbol id="icon-screening" viewBox="0 0 24 24">
+        <rect x="2.5" y="4" width="19" height="13" rx="1.5" />
+        <path d="M8 21h8m-4-4v4m-2-14 5 3.5-5 3.5z" />
+      </symbol>
+      <symbol id="icon-speaker" viewBox="0 0 24 24">
+        <rect x="5" y="2.5" width="14" height="19" rx="2" />
+        <circle cx="12" cy="14" r="3.5" />
+        <path d="M12 6.5h.01" />
+      </symbol>
+      <symbol id="icon-adapter" viewBox="0 0 24 24">
+        <rect x="4" y="3" width="8" height="5" rx="1" />
+        <path d="M8 8v5a3 3 0 0 0 3 3h5m2-3h4v6h-4a2 2 0 0 1-2-2v-2a2 2 0 0 1 2-2Z" />
+      </symbol>
+      <symbol id="icon-microphone" viewBox="0 0 24 24">
+        <rect x="9" y="2.5" width="6" height="12" rx="3" />
+        <path d="M5.5 11.5a6.5 6.5 0 0 0 13 0M12 18v3m-3 0h6" />
+      </symbol>
+      <symbol id="icon-camera" viewBox="0 0 24 24">
+        <path d="M3 8h4l2-3h6l2 3h4v12H3z" />
+        <circle cx="12" cy="13.5" r="3" />
+      </symbol>
+      <symbol id="icon-arrow" viewBox="0 0 24 24">
+        <path d="M4 12h15m-6-6 6 6-6 6" />
+      </symbol>
+      <symbol id="icon-clock" viewBox="0 0 24 24">
+        <circle cx="12" cy="12" r="8.5" />
+        <path d="M12 7.5V12l3 2" />
+      </symbol>
     </svg>
     <main>
       <div id="campus-stores">
-        <div class="examstrip">
-          <span>Product Engineer practical</span>
-          <details>
-            <summary>Candidate brief</summary>
-            <div class="briefcopy">
-              <h2>Would you keep this product?</h2>
-              <p>
-                Work a shift at the campus media desk. Get the Film Society’s
-                kit out for its screening, handle the return, and leave the next
-                shift enough information to finish the job. Use the time control
-                to move the story forward.
-              </p>
-              <p>
-                Show one moment the product handles well and one moment you
-                would change. Use a specific action or decision from your shift
-                as evidence for each.
-              </p>
-              <p>
-                Sketch or prototype your change. Walk us through the same job
-                using it, explain what you would keep, and name one observation
-                at a real counter that would tell you whether it helped.
-              </p>
-              <p>
-                Use any tools you like, including AI assistants, web search,
-                and design or coding tools.
-              </p>
-            </div>
-          </details>
-        </div>
         <header class="mast">
           <div class="brandblock">
-            <div class="brandmark" aria-hidden="true">
-              <svg aria-hidden="true" class="store-icon">
-                <use href="#icon-package-open"></use>
-              </svg>
-            </div>
-            <div>
-              <h1>Campus Stores</h1>
-              <div class="muted">Media equipment desk</div>
-            </div>
-          </div>
-          <div class="clock">
-            <small>Desk time</small><strong data-clock></strong>
+            <img class="brand-logo" src="./logo.png" width="1921" height="819" alt="Campus Stores" />
           </div>
         </header>
-        <aside class="shift">
-          <div>
-            <b data-shift-title></b>
-            <p data-shift></p>
+        <div class="desk">
+          <div class="intro">
+            <h1>Media equipment desk</h1>
+            <div class="clock">
+              <svg aria-hidden="true" class="store-icon"><use href="#icon-clock"></use></svg>
+              <div><small>Desk time</small><strong data-clock></strong></div>
+            </div>
           </div>
-          <button type="button" data-action="advance"></button>
-        </aside>
-        <div class="shell">
-          <nav aria-label="Store records" data-nav></nav>
-          <section
-            class="page"
-            data-page
-            aria-label="Selected register"
-          ></section>
-        </div>
-        <div class="statusbar">
-          <span role="status" aria-live="polite" data-status></span
-          ><button type="button" data-action="restart">
-            Restart sample shift
-          </button>
+          <aside class="shift" aria-label="Current shift">
+            <div class="shift-content">
+              <div class="eyebrow">Film Society screening</div>
+              <h2 data-shift-title tabindex="-1"></h2>
+              <p data-shift></p>
+              <button type="button" data-action="advance">
+                <span data-advance-label></span>
+                <svg aria-hidden="true" class="store-icon"><use href="#icon-arrow"></use></svg>
+              </button>
+            </div>
+            <div class="shift-art" aria-hidden="true">
+              <span class="art-grid"></span>
+              <svg class="art-device" viewBox="0 0 228 164" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <g stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round">
+                  <path opacity=".45" stroke-dasharray="2 5" d="M115 8v147M20 81h192" />
+                  <path opacity=".55" d="M36 35h13m-6.5-6.5v13M179 127h13m-6.5-6.5v13M195 40h8m-4-4v8M29 119h8m-4-4v8" />
+                  <path opacity=".7" d="M146 72l51-24m-51 43 51 24m-51-34h59" />
+                  <path fill="var(--art-fill, #232c24)" d="M47 66l15-17h85l16 17v42H47z" />
+                  <path d="M47 66h116M58 108v7h15v-7m65 0v7h15v-7M65 57h18m-25 19h19m-19 6h19m-19 6h19m-19 6h19" />
+                  <circle cx="131" cy="87" r="15" fill="var(--art-fill, #232c24)" />
+                  <circle cx="131" cy="87" r="9" /><circle cx="131" cy="87" r="4" fill="currentColor" />
+                  <path opacity=".68" d="M92 78h8m-8 7h8m-8 7h8" />
+                </g>
+              </svg>
+            </div>
+          </aside>
+          <div class="shell">
+            <nav aria-label="Desk tools" data-nav></nav>
+            <section class="page" data-page aria-label="Selected desk tool"></section>
+          </div>
+          <footer class="statusbar">
+            <span role="status" data-status></span>
+            <button type="button" data-action="undo-return" hidden>Undo return</button>
+            <button type="button" class="text-button" data-action="restart">Restart sample shift</button>
+          </footer>
         </div>
       </div>
     </main>
