@@ -1,6 +1,6 @@
 # Campus Stores
 
-Campus Stores is a Product Engineer work sample set at a fictional campus media equipment desk. The [candidate brief](CANDIDATE_BRIEF.md) is separate from the staff interface.
+Campus Stores is a Product Engineer work sample set at a fictional campus media equipment desk. 
 
 ## Run the app
 
@@ -30,7 +30,7 @@ The prototype places the kit checklist on the approved request. The desk can iss
 
 At a real counter, I would watch whether a colleague coming on shift can match the adapter and close the correct slip on the first attempt without asking the outgoing worker. Equipment names, physical IDs and the next action lead the desk views. [University of Puget Sound equipment checkout](https://www.pugetsound.edu/technology-services/media-services/checkout-equipment) informed which details matter during pickup and return.
 
-The supplied `logo.png` sets the orange, teal and charcoal palette. The [product breakdown and design sources](docs/product-breakdown.html#sources) document the starter evidence, inFlow references, and which proposals are implemented locally.
+The supplied `logo.png` sets the orange, teal and charcoal palette.
 
 ## Source
 
