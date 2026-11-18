@@ -28,9 +28,7 @@ The prototype places the kit checklist on the approved request. The desk can iss
 2. Select **Move to return time**. Record the projector and speaker returns. On the adapter, select **Add handover**, enter `Leela Das` and `Saturday, 9 am`, then save.
 3. Select **Move to next morning**. Match the adapter ID to the open slip and record its return. The Film Society request should read **Returned**. The Debate Union microphone should remain in **Loan register → Outstanding**.
 
-At a real counter, I would watch whether a colleague coming on shift can match the adapter and close the correct slip on the first attempt without asking the outgoing worker.
-
-The design borrows the short labels and distinct item marks of [Gödel Machines](https://www.goedelmachines.com/). Equipment names, physical IDs and the next action lead the desk views. [University of Puget Sound equipment checkout](https://www.pugetsound.edu/technology-services/media-services/checkout-equipment) informed which details matter during pickup and return.
+At a real counter, I would watch whether a colleague coming on shift can match the adapter and close the correct slip on the first attempt without asking the outgoing worker. Equipment names, physical IDs and the next action lead the desk views. [University of Puget Sound equipment checkout](https://www.pugetsound.edu/technology-services/media-services/checkout-equipment) informed which details matter during pickup and return.
 
 The supplied `logo.png` sets the orange, teal and charcoal palette. The [product breakdown and design sources](docs/product-breakdown.html#sources) document the starter evidence, inFlow references, and which proposals are implemented locally.
 
